@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+FILE *data;
+FILE *data2;
+struct personData{
+    char name[100];
+    char number[100];
+    char adress[100];
+} person;
+void organize(){
+    char nameList[100][100];
+    int r = 0;
+    char forCompare[100];
+    data = fopen("data.txt","r");
+    while(!feof(data)){
+        fscanf(data,"%s\t%s\t%s\n",person.name,person.number,person.adress);
+        strcpy(nameList[r],person.name);
+        r++;
+    }
+    fclose(data);
+
+   int i, j, num =100;
+   char temp[100];
+   for(i=0; i < num-1 ; i++){
+      for(j=i+1; j< num; j++){
+         if(strcmp(nameList[i],nameList[j]) > 0)
+         {
+             strcpy(temp,nameList[i]);
+             strcpy(nameList[i],nameList[j]);
+             strcpy(nameList[j],temp);
+         }
+      }
+   }
+   data2 = fopen("data2.txt","w");
+   fclose(data2);
+   for(int k=0; k<100 ;k++){
+      data2= fopen("data2.txt","a");
+      data = fopen("data.txt","r");
+        while(!feof(data)){
+        fscanf(data,"%s\t%s\t%s\n",person.name,person.number,person.adress);
+        strcpy(forCompare,person.name);
+        if(strcmp(nameList[k],forCompare) == 0){
+        fprintf(data2,"%s\t%s\t%s\n",person.name,person.number,person.adress);
+        }
+        }
+           fclose(data);
+           fclose(data2);
+   }
+
+}
+void ajoute(){
+    data = fopen("data.txt","a");
+    if(data == NULL){printf("File doesn't exist");};
+    printf("Enter the name: "); gets(person.number);
+    printf("Enter the phone number: "); gets(person.name);
+    printf("Enter the adress: ");gets(person.adress);
+
+    fprintf(data,"%s\t%s\t%s\n",person.number,person.name,person.adress);
+    printf("=============================\n");
+    fclose(data);
+    organize();
+};
+void aficher(){
+    data2 = fopen("data2.txt","r");
+    if(data2 == NULL){printf("File doesn't exist");return 0;};
+    printf("Name\tNumber\tAdress\n\n");
+    while(!feof(data2)){
+     fscanf(data2,"%s\t%s\t%s\n",person.name,person.number,person.adress);
+     printf("%s\t%s\t%s\n",person.name,person.number,person.adress);
+    }
+     fclose(data2);
+};
+int main()
+{
+    ajoute();
+    aficher();
+    return 0;
+}
